@@ -170,7 +170,7 @@ Tile.prototype.update = function() {
 };
 
 var stage = new PIXI.Stage(0x000000);
-var renderer = new PIXI.WebGLRenderer(800, 600);
+var renderer = new PIXI.WebGLRenderer(800, 600, { view: document.getElementById('game') });
 
 var score = new Score();
 var cards = [];
@@ -182,6 +182,7 @@ var board = [
     [Bread, GoldBar, Bread, Bread]
 ];
 function setUpBoard() {
+    cards = [];
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
             var card = new board[i][j](j, i, stage);
@@ -192,7 +193,62 @@ function setUpBoard() {
 }
 setUpBoard();
 
-document.body.appendChild(renderer.view);
+document.getElementById('randomize').onclick = function() {
+    score.value = 0;
+    
+    board = [];
+    
+    cards.forEach(function(card) {
+        card.removed = true;
+    });
+    
+    stage.children.forEach(function(child) {
+        child.update();
+    });
+    
+    if (document.getElementById('new').value !== '') {
+        seed = parseInt(document.getElementById('new').value);
+        document.getElementById('new').value = '';
+    }
+    else {
+        seed = Math.floor(Math.random() * 1337);
+    }
+    
+    for (var i = 0; i < 4; i++) {
+        var row = [];
+        for (var j = 0; j < 4; j++) {
+            var r = random();
+            console.log(r);
+            
+            if (r < 0.1) {
+                row.push(Diamond);
+            }
+            
+            else if (r < 0.2) {
+                row.push(GoldBar);
+            }
+            
+            else if (r < 0.3) {
+                row.push(Yarn);
+            }
+            
+            else {
+                row.push(Bread);
+            }
+        }
+        board.push(row);
+    }
+    document.getElementById('seed').innerHTML = seed - 16; // why doesnt JS have a real seedable PRNG...
+    
+    setUpBoard()
+};
+
+var seed;
+function random() {
+    seed++;
+    var x = Math.sin(seed) * 1000000;
+    return x - Math.floor(x);
+}
 
 (function draw() {
     // some generic method for updating animation properties of all cards
