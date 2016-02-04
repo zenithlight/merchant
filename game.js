@@ -122,7 +122,6 @@ function Yarn(x, y, stage) {
     this.x = x;
     this.y = y;
     this.value = 2;
-    this.scoreMultiplier = 2;
     this.effect = { 'select': 'adjacent', 'increaseValue': 5 };
     this.color = 0xFFFFFF;
     this.removed = false;
