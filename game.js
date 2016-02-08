@@ -1,3 +1,7 @@
+var TILE_WIDTH = 100;
+var TILE_HEIGHT = 100;
+var TILE_SPACING = 5;
+
 var events = new EventEmitter();
 
 events.on('sell', function(card) {
@@ -136,7 +140,7 @@ function Tile(card) {
     
     this.graphics = new PIXI.Graphics();
     this.graphics.interactive = true;
-    this.graphics.hitArea = new PIXI.Rectangle(0, 0, 80, 80);
+    this.graphics.hitArea = new PIXI.Rectangle(0, 0, TILE_WIDTH, TILE_HEIGHT);
     this.graphics.on('click', function() {
         events.emit('sell', self.card)
     })
@@ -144,8 +148,8 @@ function Tile(card) {
     this.text = new PIXI.Text('0', { font: '14px Arial', fill: 'gray' });
     this.text.anchor.x = 1;
     this.text.anchor.y = 1;
-    this.text.position.x = 75;
-    this.text.position.y = 75;
+    this.text.position.x = TILE_WIDTH - 5;
+    this.text.position.y = TILE_HEIGHT - 5;
     
     this.addChild(this.graphics);
     this.addChild(this.text);
@@ -158,12 +162,12 @@ Tile.prototype.update = function() {
         return;
     }
     
-    this.position.x = 50 + 85 * this.card.x;
-    this.position.y = 50 + 85 * this.card.y;
+    this.position.x = 50 + (TILE_WIDTH + TILE_SPACING) * this.card.x;
+    this.position.y = 50 + (TILE_HEIGHT + TILE_SPACING) * this.card.y;
     
     this.graphics.clear();
     this.graphics.lineStyle(1, this.card.color);
-    this.graphics.drawRect(0, 0, 80, 80);
+    this.graphics.drawRect(0, 0, TILE_WIDTH, TILE_HEIGHT);
     
     this.text.text = this.card.value;
 };
